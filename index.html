@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <title>Affine Transformation Visualizer</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Affine Transformation Visualizer</h1>
+            <section>
+                <p>
+                    Image rotation, translation, and scaling can all be done at the same time with a single affine transformation. Each point
+                    in the original image is remapped using a linear transformation. The popular computer vision library 
+                    <a href="https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/warp_affine/warp_affine.html">OpenCV uses affine transformations</a>
+                    for image manipulation. That page has a good explanation but it's still diffuclt to really understand the meaning of the 
+                    transformation matrix without seeing it. This tool should help with that. Affine transformations are commonly thought of in 
+                    terms of matrix multiplication where a vector is multiplied by a transformation matrix, but it can also be written out as two
+                    plain old mathmatical equations.
+                </p>
+                <code>new_x = a * x + b * y + c</code>
+                <code>new_y = d * x + e * y + f</code>
+            </section>
+            <div class="canvas-container">
+                <canvas id="affine-canvas" width="1000" height="500"></canvas>
+                <table id="key">
+                    <tr>
+                        <td><b>a</b></td>
+                        <td>Scale X</td>
+                    </tr>
+                    <tr>
+                        <td><b>b</b></td>
+                        <td>Skew X</td>
+                    </tr>
+                    <tr>
+                        <td><b>c</b></td>
+                        <td>Translate X</td>
+                    </tr>
+                    <tr>
+                        <td><b>d</b></td>
+                        <td>Skew Y</td>
+                    </tr>
+                    <tr>
+                        <td><b>e</b></td>
+                        <td>Scale Y</td>
+                    </tr>
+                    <tr>
+                        <td><b>f</b></td>
+                        <td>Translate Y</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="t-matrix-container">
+                <h3>Transformation Matrix</h3>
+                <form id="t-matrix-form" class="transformation-matrix">
+                    <label for="t_a" class="t-matrix-input" >a:</label>
+                    <input type="number" step="any" id="t_a" class="t-matrix-input" value="1">
+                    <label for="t_b" class="t-matrix-input" >b:</label>
+                    <input type="number" step="any" id="t_b" class="t-matrix-input" value="0">
+                    <label for="t_c" class="t-matrix-input" >c:</label>
+                    <input type="number" step="any" id="t_c" class="t-matrix-input" value="200">
+                    <label for="t_d" class="t-matrix-input" >d:</label>
+                    <input type="number" step="any" id="t_d" class="t-matrix-input" value="0">
+                    <label for="t_e" class="t-matrix-input" >e:</label>
+                    <input type="number" step="any" id="t_e" class="t-matrix-input" value="1">
+                    <label for="t_f" class="t-matrix-input" >f:</label>
+                    <input type="number" step="any" id="t_f" class="t-matrix-input" value="200">
+                    <button type="submit" id="redraw" class="t-matrix-input">Update</button>
+                </form>
+            </div>
+        </div>
+        <script src="./affine_transformation.js"></script>
+    </body>
+</html>
