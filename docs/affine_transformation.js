@@ -41,7 +41,7 @@ function drawArrow(ctx, fromx, fromy, tox, toy){
     ctx.moveTo(fromx, fromy);
     ctx.lineTo(tox, toy);
     ctx.strokeStyle = "#79AEA3";
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 1;
     ctx.stroke();
 
     //starting a new path from the head of the arrow to one of the sides of the point
@@ -58,7 +58,7 @@ function drawArrow(ctx, fromx, fromy, tox, toy){
 
     //draws the paths created above
     ctx.strokeStyle = "#434371";
-    ctx.lineWidth = 0.25;
+    ctx.lineWidth = 2;
     ctx.stroke();
     ctx.fillStyle = "#434371";
     ctx.fill();
@@ -87,8 +87,8 @@ function draw() {
     var image_width = 3;
     for (var y = 0; y < image_height; y++) {
         for (var x = 0; x < image_width; x++) {
-            var orig_x = x * 20;
-            var orig_y = y * 20;
+            var orig_x = x * 40;
+            var orig_y = y * 40;
 
             drawPoint(ctx, orig_x, orig_y);
 
