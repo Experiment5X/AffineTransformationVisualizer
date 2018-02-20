@@ -27,7 +27,7 @@ section {
 }
 
 button {
-    background: #434371;
+    background: #333130;
     border: none;
     border-radius: 5px;
     height: 2rem;
@@ -38,15 +38,15 @@ input {
     height: 1.5rem;
     padding: 2px;
     border-radius: 3px;
-    border: 1px solid #ccc9ca;
+    border: 1px solid lightgrey;
 }
 
 input:focus {
-    outline-color: #79AEA3;
+    outline-color: #61baf9;
 }
 
 button:hover {
-    background: #5f5f84;
+    background: #141313;
 }
 
 button:active {

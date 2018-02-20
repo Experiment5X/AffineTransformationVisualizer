@@ -1,9 +1,9 @@
-function drawCircle(ctx, x, y, radius) {
+function drawCircle(ctx, x, y, radius, color) {
     ctx.moveTo(x, y);
     
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = '#484041';
+    ctx.fillStyle = color;
     ctx.fill();
 }
 
@@ -18,9 +18,8 @@ function normalizePoint(x, y) {
     return [real_x, real_y];
 }
 
-function drawPoint(ctx, x, y) {
-    var point = normalizePoint(x, y);
-    drawCircle(ctx, point[0],  point[1], 3);
+function drawPoint(ctx, x, y, color) {
+    drawCircle(ctx, x, y, 3, color);
 }
 
 function linearTransform(T, x, y) {
@@ -40,7 +39,7 @@ function drawArrow(ctx, fromx, fromy, tox, toy){
     ctx.beginPath();
     ctx.moveTo(fromx, fromy);
     ctx.lineTo(tox, toy);
-    ctx.strokeStyle = "#79AEA3";
+    ctx.strokeStyle = "#d1cdcc";
     ctx.lineWidth = 1;
     ctx.stroke();
 
@@ -57,15 +56,53 @@ function drawArrow(ctx, fromx, fromy, tox, toy){
     ctx.lineTo(tox-headlen*Math.cos(angle-Math.PI/7),toy-headlen*Math.sin(angle-Math.PI/7));
 
     //draws the paths created above
-    ctx.strokeStyle = "#434371";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#b5b1b1";
+    ctx.lineWidth = 1;
     ctx.stroke();
-    ctx.fillStyle = "#434371";
+    ctx.fillStyle = "#b5b1b1";
     ctx.fill();
 }
 
 var canvas = document.getElementById('affine-canvas');
 var ctx = canvas.getContext('2d');
+
+function redraw(interval, t_matrix, height, width, separation, max_intervals) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var image_height = height;
+    var image_width = width;
+
+    for (var y = 0; y < image_height; y++) {
+        for (var x = 0; x < image_width; x++) {
+            var orig_x = x * separation;
+            var orig_y = y * separation;
+
+
+            var new_point = linearTransform(t_matrix, orig_x, orig_y);
+            var real_new_point = normalizePoint(new_point[0], new_point[1]);
+
+            var real_point = normalizePoint(orig_x, orig_y);
+            var real_x = real_point[0];
+            var real_y = real_point[1];
+
+            var new_x = real_new_point[0];
+            var new_y = real_new_point[1];
+
+            var diff_x = new_x - real_x;
+            var diff_y = new_y - real_y;
+
+            var final_x = real_x + (diff_x / max_intervals) * interval;
+            var final_y = real_y + (diff_y / max_intervals) * interval;
+
+            drawPoint(ctx, real_x, real_y, '#333130');
+            drawPoint(ctx, final_x, final_y, '#61baf9');
+
+            if (interval === max_intervals) {
+                drawArrow(ctx, real_x, real_y, final_x, final_y);
+            }
+        }
+    }
+}
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -82,29 +119,16 @@ function draw() {
         [d, e, f]
     ];
 
-    // draw an 'image' of points
-    var image_height = 4;
-    var image_width = 3;
-    for (var y = 0; y < image_height; y++) {
-        for (var x = 0; x < image_width; x++) {
-            var orig_x = x * 40;
-            var orig_y = y * 40;
+    var max_intervals = 150;
+    var redraw_count = 0;
+    var interval_id = setInterval(function() {
+        redraw(redraw_count, transform_matrix, 4, 3, 40, max_intervals);
 
-            drawPoint(ctx, orig_x, orig_y);
-
-            var new_point = linearTransform(transform_matrix, orig_x, orig_y);
-            var real_new_point = normalizePoint(new_point[0], new_point[1]);
-
-            var real_point = normalizePoint(orig_x, orig_y);
-            var real_x = real_point[0];
-            var real_y = real_point[1];
-
-            var new_x = real_new_point[0];
-            var new_y = real_new_point[1];
-
-            drawArrow(ctx, real_x, real_y, new_x, new_y);
+        if (redraw_count >= max_intervals) {
+            clearInterval(interval_id);
         }
-    }
+        redraw_count++;
+    }, 10);
 }
 
 $("#t-matrix-form").submit(function (event) {
